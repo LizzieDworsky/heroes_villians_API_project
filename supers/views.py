@@ -21,7 +21,7 @@ def supers_list(request):
 
 
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def super_details(request, pk):
     single_super = get_object_or_404(Super, pk=pk)
     if request.method == 'GET':
@@ -31,4 +31,7 @@ def super_details(request, pk):
         serializer = SuperSerializer(single_super, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        single_super.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

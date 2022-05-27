@@ -26,9 +26,7 @@ def supers_list(request):
                 custom_response_dictionary[super_type.type] = {
                     "Supers": super_serializer.data,
                 }
-            return Response(custom_response_dictionary)
-
-
+            return Response(custom_response_dictionary, status=status.HTTP_200_OK)
     elif request.method == 'POST':
         serializer = SuperSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

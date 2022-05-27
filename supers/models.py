@@ -14,9 +14,3 @@ class Super(models.Model):
     powers = models.ManyToManyField(Power)
     catchphrase = models.CharField(max_length=255)
     super_type = models.ForeignKey(SuperType, default=1, on_delete=models.PROTECT)
-
-
-## Bonus 1:
-
-#- Alter the Super model to replace primary & secondary ability with a 'powers' ManyToManyField.
-#- Create a PATCH endpoint for the supers app that allows you to add a new Power to a Super by submitting the PK of the hero and the new power as path variables.

@@ -1,3 +1,4 @@
+from functools import partial
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -51,20 +52,12 @@ def super_details(request, pk):
         if power_param:
             powers = Power.objects.all()
             powers = powers.filter(id=power_param)
-            serializer = PowerSerializer(powers, many=True)
+            single_super.powers.add(power_param)
+            single_super.save()
+            serializer = SuperSerializer(single_super)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
+            return Response(status=status.HTTP_404_BAD_REQUEST)
     elif request.method == 'DELETE':
         single_super.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-#Create a PATCH endpoint for the supers app that allows you to add a 
-# new Power to a Super by submitting the PK of the hero and the new 
-# power as path variables.
-
-#serializer = SuperSerializer(single_super, data=request.data, partial=True)
-#serializer.is_valid(raise_exception=True)
-#serializer.save()
-#return Response(serializer.data)

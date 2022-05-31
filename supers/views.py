@@ -35,7 +35,7 @@ def supers_list(request):
 
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def super_details(request, pk):
     single_super = get_object_or_404(Super, pk=pk)
     if request.method == 'GET':
@@ -46,6 +46,15 @@ def super_details(request, pk):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'PATCH':
+        serializer = SuperSerializer(single_super, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
     elif request.method == 'DELETE':
         single_super.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+#Create a PATCH endpoint for the supers app that allows you to add a 
+# new Power to a Super by submitting the PK of the hero and the new 
+# power as path variables.

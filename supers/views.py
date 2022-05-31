@@ -55,7 +55,7 @@ def super_details(request, pk):
             single_super.powers.add(power_param)
             single_super.save()
             serializer = SuperSerializer(single_super)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_404_BAD_REQUEST)
     elif request.method == 'DELETE':

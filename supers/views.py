@@ -50,16 +50,13 @@ def super_details(request, pk):
     elif request.method == 'PATCH':
         power_param = request.query_params.get('powers')
         if power_param:
-            powers = Power.objects.filter(name=power_param)
-            if powers.exists():
-                powers = powers.get_or_create(name=power_param)
-            else: #add the power like post
-                pass
-            #check if the name (or id?) exists
-            #if it doesn't, add it, then filter the power to get just that power
-            #the filter by id is where the issue is, I think I need to filter by name 
-            # get or create function powers.get_or_create
-            single_super.powers.add(powers)
+            power = Power.objects.filter(name=power_param)
+            if power.exists():
+                power = power.get(name=power_param)
+            else:
+                power = Power(name=power_param)
+                power.save()
+            single_super.powers.add(power)
             single_super.save()
             serializer = SuperSerializer(single_super)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

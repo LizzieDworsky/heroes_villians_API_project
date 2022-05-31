@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from super_types.models import SuperType
-from .models import Super
-from .serializers import SuperSerializer
+from .models import Power, Super
+from .serializers import SuperSerializer, PowerSerializer
 
 # Create your views here.
 
@@ -47,10 +47,15 @@ def super_details(request, pk):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     elif request.method == 'PATCH':
-        serializer = SuperSerializer(single_super, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        power_param = request.query_params.get('powers')
+        if power_param:
+            powers = Power.objects.all()
+            powers = powers.filter(id=power_param)
+            serializer = PowerSerializer(powers, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
     elif request.method == 'DELETE':
         single_super.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -58,3 +63,8 @@ def super_details(request, pk):
 #Create a PATCH endpoint for the supers app that allows you to add a 
 # new Power to a Super by submitting the PK of the hero and the new 
 # power as path variables.
+
+#serializer = SuperSerializer(single_super, data=request.data, partial=True)
+#serializer.is_valid(raise_exception=True)
+#serializer.save()
+#return Response(serializer.data)
